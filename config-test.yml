@@ -1,0 +1,7 @@
+db: "storage.db"
+first-run: true
+workers: 2
+checksum: true
+dirs:
+  pool-ruben-goett: "/mnt/pool1/pool-ruben-goett"
+  pool-sakata-goett: "/mnt/pool1/pool-sakata-goett"
