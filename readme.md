@@ -62,6 +62,10 @@ Whether to calculate the checksum, otherwise just log the file size.
 
 Directory key-value pair, which can compare multiple directories on two servers at one time.
 
+### logsize
+
+A print is performed for each `logsize` GB of data.
+
 ## License
 
 This project is licensed under the terms of the MIT license.

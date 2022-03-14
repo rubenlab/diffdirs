@@ -10,6 +10,8 @@ import (
 )
 
 func diff(config *Config, sourceDb string) {
+	log.Print("diff started")
+
 	sdb, err := bolt.Open(sourceDb, 0600, nil)
 	if err != nil {
 		log.Printf("can't open db %s with error: %v", sourceDb, err)

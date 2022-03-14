@@ -13,11 +13,12 @@ type Config struct {
 	FirstRun bool `yaml:"first-run"`
 	Workers  int
 	Checksum bool
+	Logsize  int64
 }
 
 func defaultConfig() *Config {
 	return &Config{
-		"", nil, true, 2, true,
+		"", nil, true, 2, true, 10,
 	}
 }
 

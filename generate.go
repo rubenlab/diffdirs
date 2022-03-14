@@ -25,8 +25,10 @@ func generate(config *Config) {
 	createBuckets(db, config)
 	checksum := config.Checksum
 	if checksum {
+		log.Print("check file checksum started")
 		checkAndSave(db, config)
 	} else {
+		log.Print("check file size started")
 		saveSize(db, config)
 	}
 }
@@ -89,7 +91,23 @@ func checkAndSave(db *bolt.DB, config *Config) error {
 	return nil
 }
 
+const gb = 1073741824
+
 func saveSize(db *bolt.DB, config *Config) error {
+
+	var logSize int64 = config.Logsize * gb
+	var currLogSize = logSize
+	var processedGB = 0
+
+	logProcess := func(size int64) {
+		currLogSize = currLogSize - size
+		for currLogSize < 0 {
+			processedGB = processedGB + int(config.Logsize)
+			currLogSize = currLogSize + logSize
+			log.Printf("%dGB of data processed", processedGB)
+		}
+	}
+
 	cache := make([]Record, 0, writeCacheSize)
 	writeR := func(record Record) {
 		if len(cache) < writeCacheSize {
@@ -122,6 +140,7 @@ func saveSize(db *bolt.DB, config *Config) error {
 					}
 				}
 				size := info.Size()
+				logProcess(size)
 				record := Record{
 					Bucket:   bucket,
 					Path:     relpath,

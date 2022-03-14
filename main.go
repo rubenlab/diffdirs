@@ -48,9 +48,6 @@ func main() {
 		defer cntxt.Release()
 
 		log.Print("- - - - - - - - - - - - - - -")
-		log.Print("daemon started")
-	} else {
-		log.Print("program started")
 	}
 
 	if *diffFrom == "" {
