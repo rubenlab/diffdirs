@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -41,6 +42,9 @@ func CountMismatchSize(diffResult string, config *Config) {
 	err := loopMismatchFiles(diffResult, config, func(bucket string, path string, absolutePath string) error {
 		fi, err := os.Stat(absolutePath)
 		if err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				return nil
+			}
 			return err
 		}
 		// skip simlink files
