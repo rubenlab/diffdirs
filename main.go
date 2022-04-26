@@ -15,12 +15,12 @@ type Record struct {
 }
 
 var (
-	diffFrom = flag.String("diff", "", "diff with this db")
 	asDaemon = flag.Bool("d", false, "run as daemon")
 )
 
 func main() {
 	flag.Parse()
+	command := flag.Arg(0)
 
 	config, err := loadConfig("./config.yml")
 	if err != nil {
@@ -50,10 +50,25 @@ func main() {
 		log.Print("- - - - - - - - - - - - - - -")
 	}
 
-	if *diffFrom == "" {
+	if command == "diff" {
+		diffFrom2 := flag.Arg(1)
+		if diffFrom2 == "" {
+			log.Fatalf("please input a filepath to diff, for example, diffdirs diff source.db")
+			return
+		}
+		diff(config, diffFrom2)
+	} else if command == "missize" {
+		diffResult := flag.Arg(1)
+		if diffResult == "" {
+			log.Fatalf("please input the filepath to diff result, for example, diffdirs missize diffresult.csv")
+			return
+		}
+		CountMismatchSize(diffResult, config)
+	} else if command == "" {
 		generate(config)
 	} else {
-		diff(config, *diffFrom)
+		log.Fatalf("unknown command %s", command)
 	}
+
 	log.Print("program finished")
 }

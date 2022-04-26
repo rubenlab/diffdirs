@@ -28,9 +28,15 @@ After you get two db files, for example, source.db and target.db.
 
 Use target.db as the db parameter in the configuration file. Execute the following command to generate the comparison result:
 
-`go diffdirs -diff source.db`
+`go diffdirs diff source.db`
 
 The "diffresult.csv" file will be generated in the working directory.
+
+After getting the comparison results, you can analyze the total size of the missing files with the missize command
+
+`go diffdirs missize diffresult.csv`
+
+This command need to be executed on the source server.
 
 ## How it works
 
