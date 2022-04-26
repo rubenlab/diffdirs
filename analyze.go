@@ -39,7 +39,7 @@ func loopMismatchFiles(diffResult string, config *Config, walker func(bucket str
 func CountMismatchSize(diffResult string, config *Config) {
 	var totalSize int64
 	err := loopMismatchFiles(diffResult, config, func(bucket string, path string, absolutePath string) error {
-		fi, err := os.Stat("/path/to/file")
+		fi, err := os.Stat(absolutePath)
 		if err != nil {
 			return err
 		}
