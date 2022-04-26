@@ -26,7 +26,7 @@ func loopMismatchFiles(diffResult string, config *Config, walker func(bucket str
 		absolutePath := filepath.Join(bucketPath, path)
 		err := walker(bucket, path, absolutePath)
 		if err != nil {
-			return err
+			log.Println(err)
 		}
 	}
 
