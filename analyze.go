@@ -40,17 +40,14 @@ func loopMismatchFiles(diffResult string, config *Config, walker func(bucket str
 func CountMismatchSize(diffResult string, config *Config) {
 	var totalSize int64
 	err := loopMismatchFiles(diffResult, config, func(bucket string, path string, absolutePath string) error {
-		fi, err := os.Stat(absolutePath)
+		solid, err := isSolidFile(absolutePath)
 		if err != nil {
-			if errors.Is(err, os.ErrNotExist) {
-				return nil
-			}
 			return err
 		}
-		// skip simlink files
-		if fi.Mode()&os.ModeSymlink == os.ModeSymlink {
+		if !solid {
 			return nil
 		}
+		fi, _ := os.Stat(path)
 		size := fi.Size()
 		totalSize += size
 		return nil
@@ -60,4 +57,42 @@ func CountMismatchSize(diffResult string, config *Config) {
 	}
 	totalGB := totalSize / gb
 	fmt.Printf("total size is: %dGB", totalGB)
+}
+
+func CountMismatchCount(diffResult string, config *Config) {
+	totalCount := 0
+	err := loopMismatchFiles(diffResult, config, func(bucket string, path string, absolutePath string) error {
+		solid, err := isSolidFile(absolutePath)
+		if err != nil {
+			return err
+		}
+		if !solid {
+			return nil
+		}
+		// fmt.Println(absolutePath)
+		totalCount++
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("total count is: %d\n", totalCount)
+}
+
+func isSolidFile(path string) (bool, error) {
+	fi, err := os.Lstat(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return false, nil
+		}
+		return false, err
+	}
+	// skip simlink files
+	if fi.Mode()&os.ModeSymlink == os.ModeSymlink {
+		return false, nil
+	}
+	if fi.IsDir() {
+		return false, nil
+	}
+	return true, nil
 }

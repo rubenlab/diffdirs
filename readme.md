@@ -20,21 +20,27 @@ Change directory to the project directory, run `go build .`
 
 Create a "config.yml" file under the working directory, parameters refer to the "config-test.yml" file.
 
-Run `go diffdirs` to generate a folder information database. Execute this command in the two directories to be compared to generate two db files.
+Run `diffdirs` to generate a folder information database. Execute this command in the two directories to be compared to generate two db files.
 
-You can run the program in the background with the -d command: `go diffdirs -d`
+You can run the program in the background with the -d command: `diffdirs -d`
 
 After you get two db files, for example, source.db and target.db.
 
 Use target.db as the db parameter in the configuration file. Execute the following command to generate the comparison result:
 
-`go diffdirs diff source.db`
+`diffdirs diff source.db`
 
 The "diffresult.csv" file will be generated in the working directory.
 
 After getting the comparison results, you can analyze the total size of the missing files with the missize command
 
-`go diffdirs missize diffresult.csv`
+`diffdirs missize diffresult.csv`
+
+This command need to be executed on the source server.
+
+You can count the total count of missing files, soft links are not included.
+
+`diffdirs miscount diffresult.csv`
 
 This command need to be executed on the source server.
 

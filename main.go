@@ -16,6 +16,7 @@ type Record struct {
 
 var (
 	asDaemon = flag.Bool("d", false, "run as daemon")
+	ct       = flag.Bool("continue", false, "continue previous compensation")
 )
 
 func main() {
@@ -64,6 +65,22 @@ func main() {
 			return
 		}
 		CountMismatchSize(diffResult, config)
+	} else if command == "miscount" {
+		diffResult := flag.Arg(1)
+		if diffResult == "" {
+			log.Fatalf("please input the filepath to diff result, for example, diffdirs missize diffresult.csv")
+			return
+		}
+		CountMismatchCount(diffResult, config)
+	} else if command == "compensate" {
+		diffResult := flag.Arg(1)
+		compensation := flag.Arg(2)
+		other := flag.Arg(3)
+		if diffResult == "" || compensation == "" || other != "" {
+			log.Fatalf("please input diff result path and compensate command, for example\ndiffdirs compensate diffresult.csv \"cp {ABSPATH} {BUCKET}/{PATH}\"")
+			return
+		}
+		Compensate(config, diffResult, compensation, *ct)
 	} else if command == "" {
 		generate(config)
 	} else {
